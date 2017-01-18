@@ -85,6 +85,7 @@ public class Channel {
     }
 
     public void remove(Session user) {
+        usersByName.remove(users.remove(user));
 
     }
 

@@ -28,10 +28,8 @@ public class ChatWebSocketHandler {
 
     @OnWebSocketClose
     public void onClose(Session user, int statusCode, String reason) {
-        Channel channel = Chat.channels.get(user);
-
-        assert channel != null;
-        channel.broadcastMessage("Server", channel.get(user) + " opuścił czat.");
+        Channel channel = Chat.channelOf_(user);
+        channel.broadcastMessage("Serwer", channel.get(user) + " opuścił czat.");
         channel.remove(user);
         channel.sendUsersList();
     }
@@ -78,10 +76,11 @@ public class ChatWebSocketHandler {
             else{
                 if(json.has("pmessage")){
 
-                    Chat.channelOf_(user).sendPrivateMessageTo("Chat.channelOf_(user).getName()",
-                            Chat.channelOf_(user).getSessionOf_(
-                                    json.getString("to")
-                            ), json.getString("pmessage"));
+                    Chat.channelOf_(user).sendPrivateMessageTo(
+                            Chat.channelOf_(user).getName(),
+                            Chat.channelOf_(user).getSessionOf_(json.getString("to")),
+                            json.getString("pmessage")
+                    );
                 }
             }
 
