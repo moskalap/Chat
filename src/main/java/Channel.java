@@ -18,6 +18,8 @@ public class Channel {
 
     private final String channelName;
     private Map<Session, String> users=new ConcurrentHashMap<>();
+    private Map<String,Session> usersByName = new ConcurrentHashMap<>();
+
 
     public Channel(String channelName){
     this.channelName=channelName;
@@ -28,6 +30,7 @@ public class Channel {
     }
 
     public void addUser(String nick, Session session){
+        usersByName.put(nick,session);
         users.put(session,nick);
     }
 
@@ -89,5 +92,20 @@ public class Channel {
 
         return users;
     }
+
+    public void sendPrivateMessageTo(String sender, Session user, String message){
+        try {
+            user.getRemote().sendString(String.valueOf(new JSONObject().put("message", this.createHtmlMessageFromSender("***PW*** "+sender,message))));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Session getSessionOf_(String user){
+        return this.usersByName.get(user);
+    }
+
 }
 
