@@ -19,7 +19,7 @@ public class Chat {
     public static void main(String[] args){
         staticFileLocation("/public");
         webSocket("/chat", ChatWebSocketHandler.class);
-
+        Chat.channels.put("chatBot", new Bot("chatBot"));
         init();
     }
 

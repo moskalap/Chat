@@ -1,39 +1,283 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html >
+  <head>
     <meta charset="UTF-8">
-    <title>
-        -czat
-    </title>
-    <link rel="stylesheet" href="style.css">
+    <title>Direct Messaging</title>
+    
+    
+    <link rel="stylesheet" href="css/reset.css">
 
-</head>
-<body>
-<div id="userName">
-    <h3 id="header"> Podaj swoją nazwę i wciśnij enter:</h3>
-    <input id="nick">
-</div>
-<div id="channelsControl">
-    <h3> Wybierz czat z lsity</h3>
-    <ul id="channels">
+    
+        <link rel="stylesheet" href="css/style.css">
 
-        <!--in JS--></ul>
-    <h3> lub dodaj swój</h3>
-    <input id="newChatName">
+    
+    
+    
+  </head>
 
-</div>
-<div id="channelComponents">
+  <body>
 
-    <div id="chatControls">
-        <input id="message" placeholder="Napisz wiadomość...">
-        <button id="send">Send</button>
+    <div class="wrapper">
+    <div class="container">
+
+
+
+
+
+        <div class="left">
+            <div class="top">
+                <input id="newchannel" type="text" />
+                <a href="javascript:addChannel()" class="search"></a>
+            </div> <div id="namecontainer" class="top">
+                <input id="nick" type="text" />
+                <a href="javascript:" class="search"></a>
+            </div>
+            <div class="channelscontrol">
+                <div class="top">
+                    <h3>Kanały</h3>
+                </div>
+                <ul class="channels">
+                    <li class="channel" data-chat="channel1">
+
+                        <span class="name">Kanał 1</span>
+                        <span class="time">users</span>
+                    </li>
+                    <li class="channel" data-chat="channel1">
+
+                        <span class="name">Kanał1</span>
+                        <span class="time">users</span>
+                    </li>
+                    <li class="channel" data-chat="channel1">
+
+                        <span class="name">Kanał1</span>
+                        <span class="time">users</span>
+                    </li>
+
+
+                </ul>
+            </div>
+            <ul class="people">
+                <h3>Użytkownicy</h3>
+                  <li class="person" data-chat="person1">
+                    <img src="http://s13.postimg.org/ih41k9tqr/img1.jpg" alt="" />
+                    <span class="name">Nazwa użytkowniika</span>
+                    <span class="time">0:00 AM</span>
+                      <span class="preview">ostatnia wiadomsoc</span></li>
+                <li class="person" data-chat="person1">
+                    <img src="http://s13.postimg.org/ih41k9tqr/img1.jpg" alt="" />
+                    <span class="name">Nazwa użytkowniika</span>
+                    <span class="time">0:00 AM</span>
+                      <span class="preview">ostatnia wiadomsoc</span></li>
+                <li class="person" data-chat="person1">
+                    <img src="http://s13.postimg.org/ih41k9tqr/img1.jpg" alt="" />
+                    <span class="name">Nazwa użytkowniika</span>
+                    <span class="time">0:00 AM</span>
+                      <span class="preview">ostatnia wiadomsoc</span></li>
+                <li class="person" data-chat="person1">
+                    <img src="http://s13.postimg.org/ih41k9tqr/img1.jpg" alt="" />
+                    <span class="name">Nazwa użytkowniika</span>
+                    <span class="time">0:00 AM</span>
+                      <span class="preview">ostatnia wiadomsoc</span></li>
+                <li class="person" data-chat="person1">
+                    <img src="http://s13.postimg.org/ih41k9tqr/img1.jpg" alt="" />
+                    <span class="name">Nazwa użytkowniika</span>
+                    <span class="time">0:00 AM</span>
+                      <span class="preview">ostatnia wiadomsoc</span></li>
+                <li class="person" data-chat="person1">
+                    <img src="http://s13.postimg.org/ih41k9tqr/img1.jpg" alt="" />
+                    <span class="name">Nazwa użytkowniika</span>
+                    <span class="time">0:00 AM</span>
+                      <span class="preview">ostatnia wiadomsoc</span></li>
+                <li class="person" data-chat="person1">
+                    <img src="http://s13.postimg.org/ih41k9tqr/img1.jpg" alt="" />
+                    <span class="name">Nazwa użytkowniika</span>
+                    <span class="time">0:00 AM</span>
+                      <span class="preview">ostatnia wiadomsoc</span></li>
+                <li class="person" data-chat="person1">
+                    <img src="http://s13.postimg.org/ih41k9tqr/img1.jpg" alt="" />
+                    <span class="name">Nazwa użytkowniika</span>
+                    <span class="time">0:00 AM</span>
+                      <span class="preview">ostatnia wiadomsoc</span></li>
+                <li class="person" data-chat="person1">
+                    <img src="http://s13.postimg.org/ih41k9tqr/img1.jpg" alt="" />
+                    <span class="name">Nazwa użytkowniika</span>
+                    <span class="time">0:00 AM</span>
+                      <span class="preview">ostatnia wiadomsoc</span></li>
+                <li class="person" data-chat="person1">
+                    <img src="http://s13.postimg.org/ih41k9tqr/img1.jpg" alt="" />
+                    <span class="name">Nazwa użytkowniika</span>
+                    <span class="time">0:00 AM</span>
+                      <span class="preview">ostatnia wiadomsoc</span></li>
+
+            </ul>
+        </div>
+
+        <div class="right">
+            <div class="top"><span>Dołącz do: <span class="name"></span></span></div>
+    <div class="window" id="window">
+            <div class="chat" data-chat="person1">
+                <div class="conversation-start">
+                    <span>Today, 6:48 AM</span>
+                </div>
+                <div class="bubble you">
+                    Hello,
+                </div>
+                <div class="bubble you">
+                    it's me.
+                </div>
+                <div class="bubble you">
+                    I was wondering...
+                </div>
+            </div>
+            <div class="chat" data-chat="person2">
+                <div class="conversation-start">
+                    <span>Today, 5:38 PM</span>
+                </div>
+                <div class="bubble you">
+                    Hello, can sdsayou hear me?
+                </div><div class="bubble you">
+                    Hello, can you hear me?
+                </div><div class="bubble you">
+                    Hello, can you hear me?
+                </div><div class="bubble you">
+                    Hello, can you hear me?
+                </div><div class="bubble you">
+                    Hello, can you hear me?
+                </div><div class="bubble you">
+                    Hello, can you hear me?
+                </div><div class="bubble you">
+                    Hello, can you hear me?
+                </div><div class="bubble you">
+                    Hello, can you hear me?
+                </div><div class="bubble you">
+                    Hello, can you hear me?
+                </div><div class="bubble you">
+                    Hello, can you hear me?
+                </div><div class="bubble you">
+                    Hello, can you hear me?
+                </div><div class="bubble you">
+                    Hello, can you hear me?
+                </div><div class="bubble you">
+                    Hello, can you hear me?
+                </div>
+                <div class="bubble you">
+                    I'm in California dreaming
+                </div>
+                <div class="bubble me">
+                    ... about who we used to be.
+                </div>
+                <div class="bubble me">
+                    Are you serious?
+                </div>
+                <div class="bubble you">
+                    When we were younger and free...
+                </div>
+                <div class="bubble you">
+                    I've forgotten how it felt before
+                </div>
+            </div>
+            <div class="chat" data-chat="person3">
+                <div class="conversation-start">
+                    <span>Today, 3:38 AM</span>
+                </div>
+                <div class="bubble you">
+                    Hey human!
+                </div>
+                <div class="bubble you">
+                    Umm... Someone took a shit in the hallway.
+                </div>
+                <div class="bubble me">
+                    ... what.
+                </div>
+                <div class="bubble me">
+                    Are you serious?
+                </div>
+                <div class="bubble you">
+                    I mean...
+                </div>
+                <div class="bubble you">
+                    It’s not that bad...
+                </div>
+                <div class="bubble you">
+                    But we’re probably gonna need a new carpet.
+                </div>
+            </div>
+            <div class="chat" data-chat="person4">
+                <div class="conversation-start">
+                    <span>Yesterday, 4:20 PM</span>
+                </div>
+                <div class="bubble me">
+                    Hey human!
+                </div>
+                <div class="bubble me">
+                    Umm... Someone took a shit in the hallway.
+                </div>
+                <div class="bubble you">
+                    ... what.
+                </div>
+                <div class="bubble you">
+                    Are you serious?
+                </div>
+                <div class="bubble me">
+                    I mean...
+                </div>
+                <div class="bubble me">
+                    It’s not that bad...
+                </div>
+            </div>
+            <div class="chat" data-chat="person5">
+                <div class="conversation-start">
+                    <span>Today, 6:28 AM</span>
+                </div>
+                <div class="bubble you">
+                    Wasup
+                </div>
+                <div class="bubble you">
+                    Wasup
+                </div>
+                <div class="bubble you">
+                    Wasup for the third time like is <br />you bling bitch
+                </div>
+
+            </div>
+            <div class="chat" data-chat="person6">
+                <div class="conversation-start">
+                    <span>Monday, 1:27 PM</span>
+                </div>
+                <div class="bubble you">
+                    So, how's your new phone?
+                </div>
+                <div class="bubble you">
+                    You finally have a smartphone :D
+                </div>
+                <div class="bubble me">
+                    Drake?
+                </div>
+                <div class="bubble me">
+                    Why aren't you answering?
+                </div>
+                <div class="bubble you">
+                    howdoyoudoaspace
+                </div>
+            </div>
     </div>
-    <ul id="users"> <!--in JS--></ul>
-    <div id="chat"> <!--in JS--></div>
-    <div id="privates"> <!--in JS--></div>
+            <div class="write">
+                <a href="javascript:;" class="write-link attach"></a>
+                <input id="message" type="text" />
+                <a href="javascript:;" class="write-link smiley"></a>
+                <a href="javascript:;" class="write-link send"></a>
+            </div>
+        </div>
+    </div>
 </div>
 
-<script src="controller.js"></script>
+<span class="credits">design: <a href="https://dribbble.com/Miksa" target="_blank">milan</a>, code: <a href="http://codepen.io/Momciloo" target="_blank">momcilo</a></span>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
 
-</body>
+        <script src="js/index.js"></script>
+
+    
+    
+    
+  </body>
 </html>
