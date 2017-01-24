@@ -438,7 +438,21 @@ container .left .channelscontrol .channels .channel img {
   -moz-animation-name: slideFromLeft;
   -webkit-animation-name: slideFromLeft;
   animation-name: slideFromLeft;
+
+}.container .right .bubble.all {
+
+  color: #fff;
+  background-color: #00b0ff;
+  -webkit-align-self: flex-start;
+  align-self: flex-start;
+  -moz-animation-name: slideFromLeft;
+  -webkit-animation-name: slideFromLeft;
+  animation-name: slideFromLeft;
 }
+ #group {
+   font-weight: bold;
+   color: greenyellow;
+ }
 .container .right .bubble.you:before {
   left: -3px;
   background-color: #00b0ff;

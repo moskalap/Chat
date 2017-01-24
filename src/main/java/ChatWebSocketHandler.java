@@ -92,9 +92,7 @@ public class ChatWebSocketHandler {
             }
             if (json.has("message")) {
                 System.out.println(chat.channelOf_(user).getName());
-                if(Bot.findsTaskIn(json.getString("message"))) {
-                    chat.channelOf_(user).sendPrivateMessageTo("Wszyscy", user, Bot.executeTask(json.getString("message")));
-                } else
+
                     chat.channelOf_(user).broadcastMessage(chat.channelOf_(user).get(user), json.getString("message"));
 
 

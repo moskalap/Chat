@@ -3,6 +3,8 @@ webSocket.onmessage = function (msg) { updateChat(msg); };
 webSocket.onclose = function () { alert("WebSocket connection closed") };
 webSocket.onopen = function () {
     setLoginInput();
+    $( "#write" ).hide();
+
 }
 var boolChosenCh=false;
 var readedNick=false;
@@ -94,7 +96,7 @@ var nickname;
          }
          else{
              if (data.hasOwnProperty("message") ){
-                 buildMessage(data.message, "Wszyscy", new Date(new Date().getTime()).toLocaleTimeString())
+                 buildMessageALL(data.message, data.broadcaster, new Date(new Date().getTime()).toLocaleTimeString())
              }
              if(data.hasOwnProperty("remove")){
                  deleteUser(data.remove);
@@ -115,8 +117,7 @@ var nickname;
 
 
  function buildMessage(message, sender, time){
-if(sender!=nickname)
-     {
+
 
 //window.alert(sender);
 
@@ -134,7 +135,31 @@ if(sender!=nickname)
          elem.scrollTop = elem.scrollHeight;
 
 
-     }
+
+
+ }
+function buildMessageALL(message, sender, time){
+if(sender!=nickname) {
+    s = "Wszyscy"
+//window.alert(sender);
+
+
+    var m = "<div class=\"bubble all\">" +
+        "<div id=\"group\">" + sender + " napisał:</div>" +
+        message +
+        "</div>"
+    //window.alert(m);
+
+
+    // $('.chat[data-chat = '+findChat+']').addClass('active-chat');
+    $('[data-chat= ' + s + ']').find('.time').html(time.toString())
+    $('[data-chat= ' + s + ']').find('.preview').html(message.toString())
+    insert("" + s, m)
+    var elem = document.getElementById("window");
+    elem.scrollTop = elem.scrollHeight;
+
+
+}
 
  }
 
@@ -221,8 +246,9 @@ function addEventListeners(){
             $(this).addClass('active');
             $('.chat[data-chat = '+findChat+']').addClass('active-chat');
             // setCookie("toPerson", personName);
-            actual=personName;
+            actual=findChat;
             // window.alert("wysle do"+getCookie("toPerson"));
+            $( "#write" ).show();
 
         }
     });
@@ -234,11 +260,12 @@ var d = new Date(); // for now
 d.getHours(); // => 9
 d.getMinutes(); // =>  30
 d.getSeconds(); // => 51
-
+    var username=user;
+if (user==nickname) {username ="Ty("+user+")" }
 
     var res="<li class=\"person\" data-chat=\""+user+"\">" +
         "<img src=\"http://icons.iconarchive.com/icons/graphicloads/flat-finance/48/person-icon.png\" />" +
-        "<span class=\"name\">"+user+"</span>"+
+        "<span class=\"name\">"+username+"</span>"+
         "<span class=\"time\">"+new Date(new Date().getTime()).toLocaleTimeString()+"</span>"+
     "<span class=\"preview\">Nowy</span></li>"
     return res;
@@ -273,7 +300,6 @@ var inp="<li class=\"channel\" data-chat=\"channel\"> <span class=\"name\">"+cha
 
 
  }
-
 
 
 

@@ -39,7 +39,6 @@ public class Channel {
 
                     try {
                         String a = String.valueOf(new JSONObject().put("users", new HashSet<String>(this.getUsers().values())));
-                        System.out.println(a);
 
 
                         user.getRemote().sendString(a);
@@ -92,13 +91,13 @@ public class Channel {
 
     public void broadcastMessage(String sender, String message) throws JSONException {
 
-        System.out.println(sender + " mówi " + message);
+        System.out.println(sender + " mówjji " + message);
 
 
         users.keySet().stream().filter(Session::isOpen).forEach(session -> {
             try {
                 session.getRemote().sendString(String.valueOf(new JSONObject()
-                        .put("message", message)
+                        .put("message", message).put("broadcaster", sender)
 
                 ));
             } catch (IOException | JSONException e) {
