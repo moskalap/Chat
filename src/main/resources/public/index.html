@@ -25,17 +25,24 @@
 
 
         <div class="left">
-            <div class="top">
-                <input id="newchannel" type="text" />
-                <a href="javascript:addChannel()" class="search"></a>
-            </div> <div id="namecontainer" class="top">
-                <input id="nick" type="text" />
-                <a href="javascript:" class="search"></a>
+             <div id="namecontainer" class="top">
+                <input id="nick" type="text"  placeholder="Podaj nick"/>
+                <a id=but href="javascript:saveNick()" class="join"></a>
             </div>
             <div class="channelscontrol">
+
+
                 <div class="top">
                     <h3>Kanały</h3>
                 </div>
+
+
+                <div class="top">
+                    <input id="newchannel" type="text" />
+                    <a href="javascript:addChannel()" class="search"></a>
+                </div>
+
+
                 <ul class="channels">
                     <li class="channel" data-chat="channel1">
 

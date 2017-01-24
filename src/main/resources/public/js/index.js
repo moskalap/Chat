@@ -4,8 +4,10 @@ webSocket.onclose = function () { alert("WebSocket connection closed") };
 webSocket.onopen = function () {
     setLoginInput();
 }
-
+var boolChosenCh=false;
+var readedNick=false;
 var actual
+var nickname;
  function setLoginInput (){
 
 
@@ -13,31 +15,8 @@ var actual
     // $( ".container .right" ).append( "<h3>Podaj swoją nazwę</h3>" );
     // $( ".container .right" ).append( "<input id=\"nick\" placeholder=\"Podaj swój nick i wciśnij enter\">" );
      $( ".container .left .people" ).hide();
-     $( "#nick" ).keypress(function(e) {
-        if(e.which==13 && getCookie("channelname")!=""){
-            saveInput();
-            joinChannel(getCookie("channelname"), getCookie("nickname"))
-            id("newchannel").value=getCookie("nickname")
+     $( ".container .left .channelscontrol" ).hide();
 
-            $( "#message" ).keypress(function(e) {
-
-                if(e.which==13){
-
-                    sendMessage(actual, id("message").value)
-                    id("message").value="";
-
-
-
-                }
-
-
-
-            });
-
-
-
-        }
-     });
          $( "#newchannel" ).keypress(function(e) {
              if(e.which==13 && id("newchannel").value!=""){
 
@@ -87,70 +66,44 @@ var actual
  function updateChat(msg){
      var data = JSON.parse(msg.data);
      if(data.hasOwnProperty("channels")) {
-         $( ".channels" ).empty();
-         data.channels.forEach(function (channel) {
-             addChannelToIndex(channel);
-         });
+            $( ".channels" ).empty();
+            data.channels.forEach(function (channel) {
+                addChannelToIndex(channel);
+            });
+
+            addChEventListeners()
 
 
 
 
-
-         $('.left .channel').mousedown(function(){
-             if ($(this).hasClass('.active')) {
-                 return false;
-             } else {
-                 var findChat = $(this).attr('data-chat');
-                 var channelName = $(this).find('.name').text();
-                 $('.right .top .name').html(channelName);
-                 $('.chat').removeClass('active-chat');
-                 $('.left .person').removeClass('active');
-                 $(this).addClass('active');
-                 $('.chat[data-chat = '+findChat+']').addClass('active-chat');
-
-
-                 setCookie("channelname", channelName,1);
-                              }
-         });
 
 
 
      }
      else{if(data.hasOwnProperty("users")){
          displayUsers(data)
+         addEventListeners();
 
-         $('.left .person').mousedown(function(){
-             if ($(this).hasClass('.active')) {
-                 return false;
-             } else {
-                 var findChat = $(this).attr('data-chat');
-                 var personName = $(this).find('.name').text();
-                 $('.right .top .name').html(personName);
-                 $('.chat').removeClass('active-chat');
-                 $('.left .person').removeClass('active');
-                 $(this).addClass('active');
-                 $('.chat[data-chat = '+findChat+']').addClass('active-chat');
-                // setCookie("toPerson", personName);
-                 actual=personName;
-               // window.alert("wysle do"+getCookie("toPerson"));
-
-             }
-         });
 
      }
      else {
          if (data.hasOwnProperty("message") && data.hasOwnProperty("sender")){
 
-            // window.alert(data.message)
-             buildMessage(data.message, data.sender, data.time)
+            buildMessage(data.message, data.sender, data.time)
 
          }
          else{
              if (data.hasOwnProperty("message") ){
-                 buildMessage(data.message, "Wszyscy", "godzina")
+                 buildMessage(data.message, "Wszyscy", new Date(new Date().getTime()).toLocaleTimeString())
              }
              if(data.hasOwnProperty("remove")){
-                 deleteUser(data.remove)
+                 deleteUser(data.remove);
+             }
+             if(data.hasOwnProperty("add")){
+                 addUserToHTML(data.add);
+                 addEventListeners();
+
+
              }
          }
 
@@ -162,28 +115,26 @@ var actual
 
 
  function buildMessage(message, sender, time){
-
+if(sender!=nickname)
+     {
 
 //window.alert(sender);
 
 
- var m="<div class=\"bubble you\">"+
-        message+
-     "</div>"
+         var m = "<div class=\"bubble you\">" +
+             message +
+             "</div>"
 
 
+         // $('.chat[data-chat = '+findChat+']').addClass('active-chat');
+         $('[data-chat= ' + sender + ']').find('.time').html(time.toString())
+         $('[data-chat= ' + sender + ']').find('.preview').html(message.toString())
+         insert("" + sender, m)
+         var elem = document.getElementById("window");
+         elem.scrollTop = elem.scrollHeight;
 
 
-    // $('.chat[data-chat = '+findChat+']').addClass('active-chat');
-     $('[data-chat= '+sender+']').find('.time').html(time.toString())
-     $('[data-chat= '+sender+']').find('.preview').html(message.toString())
-     insert(""+sender,m)
-     var elem = document.getElementById("window");
-     elem.scrollTop = elem.scrollHeight;
-
-
-
-
+     }
 
  }
 
@@ -214,9 +165,8 @@ function displayUsers(data){
 
     $( ".right .window" ).append("<div class=\"chat\" id=Wszyscy data-chat=Wszyscy></div>");
      data.users.forEach( function (user){
-         $( ".people" ).append(buildUserHTML(user));
+        addUserToHTML(user);
 
-         $( ".right .window" ).append("<div class=\"chat\" id="+user+ " data-chat="+user+"></div>");
 
 
 
@@ -229,18 +179,68 @@ function displayUsers(data){
 }
 
 
+function addChEventListeners() {
+    $('.left .channel').mousedown(function(){
+        if ($(this).hasClass('.active')) {
+            return false;
+        } else {
+            var findChat = $(this).attr('data-chat');
+            var channelName = $(this).find('.name').text();
+            $('.right .top .name').html(channelName);
+            $('.chat').removeClass('active-chat');
+            $('.left .person').removeClass('active');
+            $(this).addClass('active');
+            $('.chat[data-chat = '+findChat+']').addClass('active-chat');
 
+            boolChosenCh=true;
+            setCookie("channelname", channelName,1);
+            saveInput();
+        }
+    });
+}
+
+function addUserToHTML(user){
+    $( ".people" ).append(buildUserHTML(user));
+    $( ".right .window" ).append("<div class=\"chat\" id="+user+ " data-chat="+user+"></div>");
+
+}
 function deleteUser(user){
     $('.person[data-chat= '+user+']').remove();
 
 }
+function addEventListeners(){
+    $('.left .person').mousedown(function(){
+        if ($(this).hasClass('.active')) {
+            return false;
+        } else {
+            var findChat = $(this).attr('data-chat');
+            var personName = $(this).find('.name').text();
+            $('.right .top .name').html(personName);
+            $('.chat').removeClass('active-chat');
+            $('.left .person').removeClass('active');
+            $(this).addClass('active');
+            $('.chat[data-chat = '+findChat+']').addClass('active-chat');
+            // setCookie("toPerson", personName);
+            actual=personName;
+            // window.alert("wysle do"+getCookie("toPerson"));
+
+        }
+    });
+}
 
 function buildUserHTML(user){
+
+var d = new Date(); // for now
+d.getHours(); // => 9
+d.getMinutes(); // =>  30
+d.getSeconds(); // => 51
+
+
     var res="<li class=\"person\" data-chat=\""+user+"\">" +
-        "<img src=\"https://s13.postimg.org/ih41k9tqr/img1.jpg\" />" +
+        "<img src=\"http://icons.iconarchive.com/icons/graphicloads/flat-finance/48/person-icon.png\" />" +
         "<span class=\"name\">"+user+"</span>"+
-        "<span class=\"time\">0:00 AM</span>"+
-    "<span class=\"preview\">ogown</span></li>"
+        "<span class=\"time\">"+new Date(new Date().getTime()).toLocaleTimeString()+"</span>"+
+    "<span class=\"preview\">Nowy</span></li>"
     return res;
 }
 function buildAll(){
@@ -283,22 +283,76 @@ function joinChannel(channel, nick){
         channel: channel
     }));
 }
+function saveNick(){
+    setCookie("nickname", id("nick").value, 1);
+    nickname=id("nick").value;
+    $( "#but" ).attr( "class", "join" );
+    $( "#but" ).attr( "href", "javascript:saveInput()" );
+    $( ".container .left .channelscontrol" ).show();
+    $( "#nick" ).remove();
+    $( "#message" ).keypress(function(e) {
 
+        if(e.which==13){
+
+            sendMessage(actual, id("message").value)
+            id("message").value="";
+
+
+
+        }
+
+
+
+    });
+
+
+}
 
  function saveInput(){
+    //window.alert("tr");
 
-     setCookie("nickname", id("nick").value)
-     $( ".chat" ).remove();
-     $( "#nick" ).remove();
+     if(!boolChosenCh) {
+         window.alert("Musisz wybrać kanał!")
 
-     $( ".container .left .people" ).show();
-     $( ".container .left .channelscontrol" ).hide();
+     }
+     else {
+         $( "#but" ).attr( "class", "leave" );
+         $( "#but" ).attr( "href", "javascript:leave()" );
+         window.alert(getCookie("nickname"))
+         $( ".chat" ).remove();
+         $( ".container .left .people" ).show();
+         $( ".container .left .channelscontrol" ).hide();
+
+
+
+         joinChannel(getCookie("channelname"), nickname)
+        // id("newchannel").value=getCookie("nickname")
+
+
+
+     }
+
 
      //$( ".container .right" ).append( "<div class=\"top\"><span>Dołącz do: <span class=\"name\"></span></span></div>" );
      // $( ".container .right" ).append( "<div class=\"write\"> <input  id=\"message\" type=\"text\" /> <a href=\"javascript:;\" class=\"write-link smiley\"></a> <a href=\"javascript:;\" class=\"write-link send\"></a>   </div>" );
  }
 
+function leave(){
+    webSocket.send(JSON.stringify({
+        exit: "y"
+    }));
+setLoginInput();
+    $( ".chat" ).remove();
+    $( "#nick" ).remove();
 
+    $( ".container .left .people" ).hide();
+    $( ".container .left .channelscontrol" ).show();
+    $( "#but" ).attr( "class", "join" );
+    $( "#but" ).attr( "href", "javascript:saveInput()" );
+
+
+
+}
 
 
 

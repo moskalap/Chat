@@ -35,12 +35,14 @@ public class Channel {
         users.put(session, nick);
     }
 
-    public void sendUsersList() {
-        users.keySet().stream().filter(Session::isOpen).forEach(session -> {
+    public void sendUsersList(Session user) {
+
                     try {
                         String a = String.valueOf(new JSONObject().put("users", new HashSet<String>(this.getUsers().values())));
                         System.out.println(a);
-                        session.getRemote().sendString(a);
+
+
+                        user.getRemote().sendString(a);
                     } catch (IOException e) {
                         e.printStackTrace();
                     } catch (JSONException e) {
@@ -48,9 +50,9 @@ public class Channel {
                     }
                 }
 
-        );
 
-    }
+
+
 
     public void toDelete(String person){
         users.keySet().stream().filter(Session::isOpen).forEach(session -> {
@@ -160,6 +162,11 @@ public class Channel {
 
     public boolean has(String username) {
         return usersByName.containsKey(username);
+    }
+
+    public void sendnameOfUser(String username) {
+
+        toAdd(username);
     }
 }
 
