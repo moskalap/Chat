@@ -163,6 +163,7 @@ body {
 .window {
 max-height: 553px;
 min-height: 553px;
+  height: 553px;
   overflow-y: scroll;
 }
 container .left .channelscontrol .channels .channel img {

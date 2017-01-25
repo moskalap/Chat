@@ -7,7 +7,7 @@ import java.nio.charset.Charset;
 
 /**
  * Created by przemek on 19.01.17.
- * readAll() i readJSONfrom() - skopiowane ze stackoverflow
+ *
  */
 public class JSONReader {
 

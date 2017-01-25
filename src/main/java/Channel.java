@@ -39,8 +39,6 @@ public class Channel {
 
                     try {
                         String a = String.valueOf(new JSONObject().put("users", new HashSet<String>(this.getUsers().values())));
-
-
                         user.getRemote().sendString(a);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -50,14 +48,10 @@ public class Channel {
                 }
 
 
-
-
-
     public void toDelete(String person){
         users.keySet().stream().filter(Session::isOpen).forEach(session -> {
                     try {
                         String a = String.valueOf(new JSONObject().put("remove", person));
-                        System.out.println(a);
                         session.getRemote().sendString(a);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -72,7 +66,6 @@ public class Channel {
         users.keySet().stream().filter(Session::isOpen).forEach(session -> {
                     try {
                         String a = String.valueOf(new JSONObject().put("add", person));
-                        System.out.println(a);
                         session.getRemote().sendString(a);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -90,10 +83,6 @@ public class Channel {
     }
 
     public void broadcastMessage(String sender, String message) throws JSONException {
-
-        System.out.println(sender + " mówjji " + message);
-
-
         users.keySet().stream().filter(Session::isOpen).forEach(session -> {
             try {
                 session.getRemote().sendString(String.valueOf(new JSONObject()
@@ -142,10 +131,8 @@ public class Channel {
 
     public void sendPrivateMessageTo(String sender, Session user, String message) {
         try {
-            System.out.println(new JSONObject().put("message", message).put("sender", sender));
             Calendar calendar = Calendar.getInstance();
             SimpleDateFormat date= new SimpleDateFormat("HH:mm:ss");
-            System.out.println(date.format(calendar.getTime()));
             user.getRemote().sendString(String.valueOf(new JSONObject().put("message", message).put("sender", sender).put("time", date.format(calendar.getTime()))));
         } catch (IOException e) {
             e.printStackTrace();

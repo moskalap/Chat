@@ -4,18 +4,17 @@ webSocket.onclose = function () { alert("WebSocket connection closed") };
 webSocket.onopen = function () {
     setLoginInput();
     $( "#write" ).hide();
+    $('.right .top').hide();
 
 }
 var boolChosenCh=false;
 var readedNick=false;
 var actual
 var nickname;
- function setLoginInput (){
+function setLoginInput (){
 
 
      $( ".chat" ).remove();
-    // $( ".container .right" ).append( "<h3>Podaj swoją nazwę</h3>" );
-    // $( ".container .right" ).append( "<input id=\"nick\" placeholder=\"Podaj swój nick i wciśnij enter\">" );
      $( ".container .left .people" ).hide();
      $( ".container .left .channelscontrol" ).hide();
 
@@ -30,12 +29,7 @@ var nickname;
 
      });
  }
-
-
-
-
-
- function sendMessage(to, message){
+function sendMessage(to, message){
      if(to!="Wszyscy")
      webSocket.send(JSON.stringify({
          pmessage: message,
@@ -55,17 +49,7 @@ var nickname;
 
 
  }
-
-
-
-
-
-
-
-
-
-
- function updateChat(msg){
+function updateChat(msg){
      var data = JSON.parse(msg.data);
      if(data.hasOwnProperty("channels")) {
             $( ".channels" ).empty();
@@ -113,13 +97,10 @@ var nickname;
 
      }
  }
+function buildMessage(message, sender, time){
 
 
 
- function buildMessage(message, sender, time){
-
-
-//window.alert(sender);
 
 
          var m = "<div class=\"bubble you\">" +
@@ -127,7 +108,7 @@ var nickname;
              "</div>"
 
 
-         // $('.chat[data-chat = '+findChat+']').addClass('active-chat');
+
          $('[data-chat= ' + sender + ']').find('.time').html(time.toString())
          $('[data-chat= ' + sender + ']').find('.preview').html(message.toString())
          insert("" + sender, m)
@@ -141,14 +122,13 @@ var nickname;
 function buildMessageALL(message, sender, time){
 if(sender!=nickname) {
     s = "Wszyscy"
-//window.alert(sender);
+
 
 
     var m = "<div class=\"bubble all\">" +
         "<div id=\"group\">" + sender + " napisał:</div>" +
         message +
         "</div>"
-    //window.alert(m);
 
 
     // $('.chat[data-chat = '+findChat+']').addClass('active-chat');
@@ -162,11 +142,10 @@ if(sender!=nickname) {
 }
 
  }
+function buildMessagelocal(message, sender){
 
- function buildMessagelocal(message, sender){
 
 
-//window.alert(sender);
 
 
  var m="<div class=\"bubble me\">"+
@@ -202,8 +181,6 @@ function displayUsers(data){
 
 
 }
-
-
 function addChEventListeners() {
     $('.left .channel').mousedown(function(){
         if ($(this).hasClass('.active')) {
@@ -220,10 +197,10 @@ function addChEventListeners() {
             boolChosenCh=true;
             setCookie("channelname", channelName,1);
             saveInput();
+
         }
     });
 }
-
 function addUserToHTML(user){
     $( ".people" ).append(buildUserHTML(user));
     $( ".right .window" ).append("<div class=\"chat\" id="+user+ " data-chat="+user+"></div>");
@@ -247,13 +224,13 @@ function addEventListeners(){
             $('.chat[data-chat = '+findChat+']').addClass('active-chat');
             // setCookie("toPerson", personName);
             actual=findChat;
-            // window.alert("wysle do"+getCookie("toPerson"));
+
             $( "#write" ).show();
+            $('.right .top').show();
 
         }
     });
 }
-
 function buildUserHTML(user){
 
 var d = new Date(); // for now
@@ -275,21 +252,19 @@ function buildAll(){
     var res="<li class=\"person\"  data-chat=\""+user+"\">" +
         "<img src=\"http://tarpley.net/images/ufaa.ico\" />" +
         "<span class=\"name\">"+user+"</span>"+
-        "<span class=\"time\">0:00 AM</span>"+
-        "<span class=\"preview\">asdas</span></li>"
+        "<span class=\"time\"></span>"+
+        "<span class=\"preview\"></span></li>"
     return res;
 }
-
 function addChannel(){
    var channel= id("newchannel").value
     webSocket.send(JSON.stringify({
         newChannel: channel
     }));
 }
-
 function addChannelToIndex(channel){
 
-var inp="<li class=\"channel\" data-chat=\"channel\"> <span class=\"name\">"+channel+"</span> <span class=\"time\">users</span> </li>"
+var inp="<li class=\"channel\" data-chat=\"channel\"> <span class=\"name\">"+channel+"</span> <span class=\"time\"></span> </li>"
 
 
     $( ".channels" ).append( inp );
@@ -300,9 +275,6 @@ var inp="<li class=\"channel\" data-chat=\"channel\"> <span class=\"name\">"+cha
 
 
  }
-
-
-
 function joinChannel(channel, nick){
     webSocket.send(JSON.stringify({
         nick: nick,
@@ -333,9 +305,8 @@ function saveNick(){
 
 
 }
+function saveInput(){
 
- function saveInput(){
-    //window.alert("tr");
 
      if(!boolChosenCh) {
          window.alert("Musisz wybrać kanał!")
@@ -344,7 +315,7 @@ function saveNick(){
      else {
          $( "#but" ).attr( "class", "leave" );
          $( "#but" ).attr( "href", "javascript:leave()" );
-         window.alert(getCookie("nickname"))
+
          $( ".chat" ).remove();
          $( ".container .left .people" ).show();
          $( ".container .left .channelscontrol" ).hide();
@@ -362,7 +333,6 @@ function saveNick(){
      //$( ".container .right" ).append( "<div class=\"top\"><span>Dołącz do: <span class=\"name\"></span></span></div>" );
      // $( ".container .right" ).append( "<div class=\"write\"> <input  id=\"message\" type=\"text\" /> <a href=\"javascript:;\" class=\"write-link smiley\"></a> <a href=\"javascript:;\" class=\"write-link send\"></a>   </div>" );
  }
-
 function leave(){
     webSocket.send(JSON.stringify({
         exit: "y"
@@ -379,15 +349,9 @@ setLoginInput();
 
 
 }
-
-
-
-
 function insert(targetId, message) {
     id(targetId).insertAdjacentHTML("beforeend", message);
 }
-
-
 function id(id) {
     return document.getElementById(id);
 }

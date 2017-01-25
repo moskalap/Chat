@@ -13,13 +13,9 @@ public class Main {
     public static void main(String[] args){
 
         Chat chat= new Chat ("Czat");
-
         staticFileLocation("/public");
         ChatWebSocketHandler handler=new ChatWebSocketHandler(chat);
-
         webSocket("/chat",  handler);
-
-
         init();
     }
 }
