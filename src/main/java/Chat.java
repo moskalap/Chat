@@ -1,5 +1,8 @@
 import org.eclipse.jetty.websocket.api.Session;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import static spark.Spark.*;
@@ -30,9 +33,22 @@ public class Chat {
 
 
     public void addUser(String username, Session user, String channelName) {
+       try {
+           if (channels.get(channelName).has(username)) throw new IllegalArgumentException();
 
-        channels.get(channelName).addUser(username, user);
-        channelsOf_.put(user,channels.get(channelName));
+           channels.get(channelName).addUser(username, user);
+           channelsOf_.put(user, channels.get(channelName));
+       }
+       catch(IllegalArgumentException e){
+
+           try {
+               user.getRemote().sendString( String.valueOf(new JSONObject().put("error", "Użytkownik juz istnieje!")));
+           } catch (IOException e1) {
+               e1.printStackTrace();
+           } catch (JSONException e1) {
+               e1.printStackTrace();
+           }
+       }
 
     }
     public Map<String,Channel> getChannels(){

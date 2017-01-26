@@ -91,6 +91,10 @@ function updateChat(msg){
 
 
              }
+             if(data.hasOwnProperty("error")){
+                 window.alert(data.error);
+                 webSocket.close();
+             }
          }
 
      }
