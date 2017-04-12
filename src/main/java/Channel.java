@@ -105,7 +105,7 @@ public class Channel {
         ).render();
     }
 
-    public void remove(Session user) {
+    public void remove(Session user) throws IOException {
         String username = this.get(user);
         usersByName.remove(users.remove(user));
         try {
