@@ -35,77 +35,68 @@ public class ChatWebSocketHandler {
     }
 
     @OnWebSocketClose
-    public void onClose(Session user, int statusCode, String reason) {
+    public void onClose(Session user, int statusCode, String reason) throws IOException, JSONException {
         Channel channel = chat.channelOf_(user);
-        try {
-            channel.broadcastMessage("Serwer", channel.get(user) + " opuścił czat.");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+
+        channel.broadcastMessage("Serwer", channel.get(user) + " opuścił czat.");
+
         channel.remove(user);
         chat.deleteUser(user);
 
     }
 
     @OnWebSocketMessage
-    public void onMessage(Session user, String message) {
+    public void onMessage(Session user, String message) throws JSONException, IOException {
 
         JSONObject json;
-        try {
-            json = new JSONObject(message);
 
-            if (json.has("nick")) {
-                String username = null;
-                username = json.getString("nick");
-                String channelName = null;
-                channelName = json.getString("channel");
-                chat.getChannels().get(channelName).sendnameOfUser(username);
-                if (chat.getChannels().containsKey(channelName)) {
-                    chat.addUser(username, user, channelName);
+        json = new JSONObject(message);
 
-                } else {
-                    chat.addChannel(channelName);
-                    chat.addUser(username, user, channelName);
+        if (json.has("nick")) {
+            String username = null;
+            username = json.getString("nick");
+            String channelName = null;
+            channelName = json.getString("channel");
+            chat.getChannels().get(channelName).sendnameOfUser(username);
+            if (chat.getChannels().containsKey(channelName)) {
+                chat.addUser(username, user, channelName);
 
-                }
-                //Wysyłamy liste  userów dla każdego websocketa z kanału
-                chat.getChannels().get(channelName).sendUsersList(user);
-                chat.getChannels().get(channelName).broadcastMessage(username, username + " dołączył do czatu.");
             } else {
-                if (json.has("newChannel")) {
-                    chat.addChannel(json.getString("newChannel"));
-                    try {
-                        user.getRemote().sendString(String.valueOf(new JSONObject()
-                                .put("channels", chat.getChannels().keySet())
-                        ));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (json.has("message")) {
-
-                    chat.channelOf_(user).broadcastMessage(chat.channelOf_(user).get(user), json.getString("message"));
-                } else {
-                    if (json.has("pmessage")) {
-
-                        chat.channelOf_(user).sendPrivateMessageTo(
-                                chat.channelOf_(user).getUsers().get(user),
-                                chat.channelOf_(user).getSessionOf_(json.getString("to")),
-                                json.getString("pmessage")
-                        );
-                    } else {
-                        if (json.has("exit")) {
-                            chat.channelOf_(user).remove(user);
-                            chat.deleteUser(user);
-                        }
-                    }
-                }
+                chat.addChannel(channelName);
+                chat.addUser(username, user, channelName);
 
             }
+            //Wysyłamy liste  userów dla każdego websocketa z kanału
+            chat.getChannels().get(channelName).sendUsersList(user);
+            chat.getChannels().get(channelName).broadcastMessage(username, username + " dołączył do czatu.");
+        } else {
+            if (json.has("newChannel")) {
+                chat.addChannel(json.getString("newChannel"));
 
+                user.getRemote().sendString(String.valueOf(new JSONObject()
+                        .put("channels", chat.getChannels().keySet())
+                ));
 
-        } catch (JSONException e) {
-            e.printStackTrace();
+            }
+            if (json.has("message")) {
+
+                chat.channelOf_(user).broadcastMessage(chat.channelOf_(user).get(user), json.getString("message"));
+            } else {
+                if (json.has("pmessage")) {
+
+                    chat.channelOf_(user).sendPrivateMessageTo(
+                            chat.channelOf_(user).getUsers().get(user),
+                            chat.channelOf_(user).getSessionOf_(json.getString("to")),
+                            json.getString("pmessage")
+                    );
+                } else {
+                    if (json.has("exit")) {
+                        chat.channelOf_(user).remove(user);
+                        chat.deleteUser(user);
+                    }
+                }
+            }
+
         }
 
 

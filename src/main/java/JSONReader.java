@@ -7,7 +7,6 @@ import java.nio.charset.Charset;
 
 /**
  * Created by przemek on 19.01.17.
- *
  */
 public class JSONReader {
 
@@ -26,18 +25,16 @@ public class JSONReader {
 
     public static JSONObject readJsonFrom(String url) throws IOException, JSONException {
         InputStream is = new URL(url).openStream();
-        try {
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-            String jsonText = readAll(rd);
 
-            JSONObject json = new JSONObject(jsonText);
-            return json;
-        } finally {
-            is.close();
-        }
+        BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+        String jsonText = readAll(rd);
+
+        JSONObject json = new JSONObject(jsonText);
+        is.close();
+        return json;
+
+
     }
-
-
 
 
 }

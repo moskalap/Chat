@@ -82,7 +82,7 @@ public class Channel {
         return users.get(session);
     }
 
-    public void broadcastMessage(String sender, String message) throws JSONException {
+    public void broadcastMessage(String sender, String message) throws JSONException, IOException {
         users.keySet().stream().filter(Session::isOpen).forEach(session -> {
             try {
                 session.getRemote().sendString(String.valueOf(new JSONObject()
